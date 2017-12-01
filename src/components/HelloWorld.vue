@@ -1,38 +1,129 @@
 <template>
   <div class="hello">
-
-    <!-- computador.enciende -->
+    <h2>Hola! por favor responda a las siguientes <br>preguntas para generarle un diagnostico.</h2>
+    <hr>
+    <!-- computador.enciende ? -->
     <div v-if="steps.estado">
-      <h1>{{ steps.mensaje }}</h1>
-      <button class="btn" v-on:click="say(true, steps, 'true1')">Yes</button>
-      <button class="btn" v-on:click="say(true, steps, 'false1')">No</button>
+      <h2>{{ steps.mensaje }}</h2>
+      <button class="btn" v-on:click="say(true, steps, 'true1')">Si enciende</button>
+      <button class="btn" v-on:click="say(true, steps, 'false1')">No enciende</button>
     </div>
 
     <!-- computador.enciende.true -->
     <div v-if="steps.true1.estado">
-      <h1>{{ steps.true1.mensaje }}</h1>
-      <button class="btn" v-on:click="say(true, steps.true1, 'true2')">Yes</button>
-      <button class="btn" v-on:click="say(true, steps.false1, 'false2')">No</button>
+      <h2>{{ steps.true1.mensaje }} </h2>
+      <button class="btn" v-on:click="say(true, steps.true1, 'true2')">Si se reinica</button>
+      <button class="btn" v-on:click="say(true, steps.true1, 'false2')">No se reinicia</button>
     </div>
 
-    <!-- computador.enciende.false -->
+    <!-- computador.enciende.false ? -->
     <div v-if="steps.false1.estado">
-      <h1>{{ steps.false1.mensaje }}</h1>
-      <button class="btn" v-on:click="say(true, steps.true1.true2, 'true2')">Yes</button>
-      <button class="btn" v-on:click="say(true, steps.false1.false2, 'false2')">No</button>
+      <h2>{{ steps.false1.mensaje }}</h2>
+      <button class="btn" v-on:click="say(true, steps.false1, 'true2')">Si esta conectado</button>
+      <button class="btn" v-on:click="say(true, steps.false1, 'false2')">No esta conectado</button>
     </div>
+
+    <!-- computador.conectado.true ? -->
+    <div v-if="steps.false1.true2.estado">
+      <h2>{{ steps.false1.true2.mensaje }}</h2>
+      <button class="btn" v-on:click="say(true, steps.false1.true2, 'true3')">Si tiene corriente</button>
+      <button class="btn" v-on:click="say(true, steps.false1.true2, 'false3')">No tiene corriente</button>
+    </div>
+
+    <!-- computador.conectado.false ? -->
+    <div v-if="steps.false1.false2.estado">
+      <h2>{{ steps.false1.false2.mensaje }} - {{steps.false1.true2.id}}</h2>
+      <button class="btn" v-on:click="recharge()">Inicio</button>
+    </div>
+
+    <!-- sin corriente ? -->
+    <div v-if="steps.false1.true2.false3.estado">
+      <h2>{{ steps.false1.true2.false3.mensaje }}</h2>
+      <button class="btn" v-on:click="recharge()">Inicio</button>
+    </div>
+
+
+    <!-- COn corriente ? -->
+    <div v-if="steps.false1.true2.true3.estado">
+      <h2>{{ steps.false1.true2.true3.mensaje }} </h2>
+      <button class="btn" v-on:click="say(true, steps.false1.true2.true3, 'true4')">Si enciende el monitor</button>
+      <button class="btn" v-on:click="say(true, steps.false1.true2.true3, 'false4')">No enciende el monitor</button>
+    </div>
+
+    <!-- No enciende monitor -->
+    <div v-if="steps.false1.true2.true3.false4.estado">
+      <h2>{{ steps.false1.true2.true3.false4.mensaje }} </h2>
+    </div>
+
+    <!-- Fuente de poder -->
+    <div v-if="steps.false1.true2.true3.true4.estado">
+      <h2>{{ steps.false1.true2.true3.true4.mensaje }} </h2>
+      <button class="btn" v-on:click="say(true, steps.false1.true2.true3.true4, 'true5')">Fuente de poder bien</button>
+      <button class="btn" v-on:click="say(true, steps.false1.true2.true3.true4, 'false5')">Fuente de poder mal</button>
+    </div>
+
+    <!-- Fuente de poder mal -->
+    <div v-if="steps.false1.true2.true3.true4.false5.estado">
+      <h2>{{ steps.false1.true2.true3.true4.false5.mensaje }} </h2>
+      <button class="btn" v-on:click="recharge()">Inicio</button>
+    </div>
+
+    <!-- Fuente de poder bien -->
+    <div v-if="steps.false1.true2.true3.true4.true5.estado">
+      <h2>{{ steps.false1.true2.true3.true4.true5.mensaje }} </h2>
+      <button class="btn" v-on:click="say(true, steps.false1.true2.true3.true4.true5, 'true6')">Perifericos bien</button>
+      <button class="btn" v-on:click="say(true, steps.false1.true2.true3.true4.true5, 'false6')">Perifericos mal</button>
+    </div>
+
+    <!-- Perifericos bien -->
+    <div v-if="steps.false1.true2.true3.true4.true5.true6.estado">
+      <h2>{{ steps.false1.true2.true3.true4.true5.true6.mensaje }}</h2>
+      <button class="btn" v-on:click="recharge()">Inicio</button>
+    </div>
+
+    <!-- Perifericos mal -->
+    <div v-if="steps.false1.true2.true3.true4.true5.false6.estado">
+      <h2>{{ steps.false1.true2.true3.true4.true5.false6.mensaje }}</h2>
+      <button class="btn" v-on:click="recharge()">Inicio</button>
+    </div>
+
 
     <!-- computador.reinicio.true -->
     <div v-if="steps.true1.true2.estado">
-      <h1>{{ steps.true1.true2.mensaje }}</h1>
+      <h2>{{ steps.true1.true2.mensaje }}</h2>
       <button class="btn" v-on:click="recharge()">Inicio</button>
     </div>
 
     <!-- computador.reinicio.false -->
-    <div v-if="steps.false1.false2.estado">
-      <h1>{{ steps.false1.false2.mensaje }}</h1>
-      <button class="btn" v-on:click="say(true, steps.true1.true2.true3.true4, 'true4')">Yes</button>
-      <button class="btn" v-on:click="say(true, steps.false1.false2.false3.false4, 'false4')">No</button>
+    <div v-if="steps.true1.false2.estado">
+      <h1>{{ steps.true1.false2.mensaje }} </h1>
+      <button class="btn" v-on:click="say(true, steps.true1.false2, 'true3')">Si esta lento</button>
+      <button class="btn" v-on:click="say(true, steps.true1.false2, 'false3')">No esta lento</button>
+    </div>
+
+    <!-- lento -->
+    <div v-if="steps.true1.false2.true3.estado">
+      <h2>{{ steps.true1.false2.true3.mensaje }}</h2>
+      <button class="btn" v-on:click="recharge()">Inicio</button>
+    </div>
+
+    <!-- no lento -->
+    <div v-if="steps.true1.false2.false3.estado">
+      <h2>{{ steps.true1.false2.false3.mensaje }}</h2>
+      <button class="btn" v-on:click="say(true, steps.true1.false2.false3, 'true4')">Si hay error</button>
+      <button class="btn" v-on:click="say(true, steps.true1.false2.false3, 'false4')">No hay errores</button>
+    </div>
+
+    <!-- Con error -->
+    <div v-if="steps.true1.false2.false3.true4.estado">
+      <h2>{{ steps.true1.false2.false3.true4.mensaje }}</h2>
+      <button class="btn" v-on:click="recharge()">Inicio</button>
+    </div>
+
+    <!-- Con error -->
+    <div v-if="steps.true1.false2.false3.false4.estado">
+      <h2>{{ steps.true1.false2.false3.false4.mensaje }}</h2>
+      <button class="btn" v-on:click="recharge()">Inicio</button>
     </div>
 
     <div v-if="mensaje_finalizar.state">{{ mensaje_finalizar.mensaje }}</div>
@@ -55,7 +146,7 @@ export default {
           estado: false,
           true2: {
             id: 'computador.reinicio.true',
-            mensaje: 'Revisar e hardware, el Sistema operativo, y el disco duro',
+            mensaje: 'Diagnostico: Revisar e hardware, el Sistema operativo, y el disco duro',
             estado: false,
           },
           false2: {
@@ -85,7 +176,7 @@ export default {
           mensaje: '¿Esta conectado?',
           estado: false,
           true2: {
-            ensaje: '¿Tiene corriente?',
+            mensaje: '¿Tiene corriente?',
             estado: false,
             true3: {
               mensaje: '¿El monitor enciende?',
@@ -106,7 +197,7 @@ export default {
                   },
                 },
                 false5: {
-                  mensaje: 'Verificar la menoria y la boars',
+                  mensaje: 'Verificar la menoria y la board',
                   estado: false,
                 },
               },
@@ -121,6 +212,7 @@ export default {
             },
           },
           false2: {
+            id: 'verifique_conectiv',
             mensaje: 'Verifique su conectividad',
             estado: false,
           },
@@ -145,6 +237,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+body {
+  padding: 20px;
+}
+.hello {
+  padding: 30px;
+}
 h1, h2 {
   font-weight: normal;
 }
@@ -156,10 +254,20 @@ li {
   display: inline-block;
   margin: 0 10px;
 }
+div {
+  margin: 40px 0px;
+}
 a {
   color: #42b983;
 }
 button {
   cursor: pointer;
+}
+button:focus {
+    background-color: #4196d0;
+}
+
+button:active {
+    background-color: #4196d0;
 }
 </style>
